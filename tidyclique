@@ -1,3 +1,7 @@
+# If you want to pull the cliques per row in a tidy format
+# call tidyclique using an integer to set the clique size
+
+
 tidyclique <- function (n_words_clique) {
    
    df <- names(unlist(cliques(graph, min = n_words_clique, max = n_words_clique))) %>%
@@ -14,4 +18,13 @@ tidyclique <- function (n_words_clique) {
    select(cliqueID, c(paste0("V",label)))
    colnames(df1) <- labelcol
    df1
+}
+
+
+
+# If you want to vectorize tidyclique with purrr::map just declare a vector and call tidyclique_all
+
+tidyclique_all <- function (vector) {
+                  map(vector, tidyclique) %>%  
+                  bind_rows(.)
 }
