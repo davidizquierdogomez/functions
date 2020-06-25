@@ -2,7 +2,7 @@
 # call tidyclique using an integer to set the clique size
 
 
-tidyclique <- function (n_words_clique) {
+tidycliq <- function (n_words_clique) {
    
    df <- names(unlist(cliques(graph, min = n_words_clique, max = n_words_clique))) %>%
               cbind(cliqueID = rep(1:n_words_clique, length(names(unlist(cliques(graph, min = n_words_clique, max = n_words_clique))))/n_words_clique)) %>% 
@@ -10,21 +10,21 @@ tidyclique <- function (n_words_clique) {
               rename(word = ".")
    
    label <- c(1:n_words_clique)
-   labelcol <- c("clique_ID", paste0("word", label))
+   labelcol <- c("clique_ID", "items", paste0("word", label))
    
    df1 <- as_tibble(matrix(df$word, ncol = n_words_clique, byrow=TRUE)) %>%
    {. ->> otro} %>% 
-   cbind(cliqueID = c(1:length(otro$V1))) %>% 
-   select(cliqueID, c(paste0("V",label)))
+   cbind(items = n_words_clique,
+         cliqueID = c(1:length(otro$V1))) %>%    
+   select(cliqueID, items, everything())
    colnames(df1) <- labelcol
    df1
 }
 
 
-
-# If you want to vectorize tidyclique with purrr::map just declare a vector and call tidyclique_all
-
-tidyclique_all <- function (vector) {
+tidycliq_all <- function (vector) {
                   map(vector, tidyclique) %>%  
-                  bind_rows(.)
+                  bind_rows(.) %>% 
+                  mutate(ID = c(1:length(.[,1]))) %>% 
+                  select(ID, everything())
 }
