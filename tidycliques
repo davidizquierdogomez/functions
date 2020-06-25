@@ -20,7 +20,6 @@ tidycliq <- function (n_words_clique) {
    df1
 }
 
-
 tidycliq_all <- function (vector) {
                   map(vector, tidyclique) %>%  
                   bind_rows(.) %>% 
